@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> /* set the CSS */
+ 
+body { font: 12px Arial;}
+
+a {
+    text-decoration: none;
+    color: red;
+}
+ 
+path { 
+  stroke: steelblue;
+  stroke-width: 1;
+  fill: none;
+}
+ 
+.axis path,
+.axis line {
+	fill: none;
+	stroke: black;
+	stroke-width: 1;
+	shape-rendering: crispEdges;
+}
+
+.grid .tick {
+}
+.grid path {
+    stroke-width: 0;
+    stroke: lightgrey;
+    opacity: 0.5
+}
+
+div.footer {
+    width: 100%;
+    text-align: center;
+    font-size: smaller;
+}
+
+div.graph {
+    width: 100%;
+  }
+
+#user_info {
+    text-align: right;
+    margin-right: 150px;
+}
+
+</style>
+<body>
+  <table width="100%">
+    <tr>
+    <td>
+    <h1>Tanita grapher</h1>
+    <input type="file" id="files" name="files[]" multiple />
+    <output id="list"></output>
+
+    <script>
+      function handleFileSelect(evt) {
+      var files = evt.target.files; // FileList object
+
+	      // files is a FileList of File objects. List some properties.
+      var output = [];
+      for (var i = 0, f; f = files[i]; i++) {
+            output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+	                f.size, ' bytes, last modified: ',
+                        f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                  '</li>');
+      }
+      document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+    }
+
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    </script>
+    <td width="50%" id="user_info">
+    <td width="50px" ><img id="img_model" width="48" height="48">
+  </table>
+  <hr>  
+  <table>
+    <tr><td><img src="img/body_fat.jpg"    width="48" height="48"><td id="body_fat">     <td><object id="body_p" data="img/body.svg" />
+    <tr><td><img src="img/muscle_mass.jpg" width="48" height="48"><td id="global_muscle"><td><object id="body_p" data="img/body.svg" />
+    <tr><td><img src="img/muscle_mass.jpg" width="48" height="48"><td id="leg_muscle">   <td><object id="body_p" data="img/body.svg" />
+    <tr><td><img src="img/muscle_mass.jpg" width="48" height="48"><td id="arm_muscle">   <td><object id="body_p" data="img/body.svg" />
+    <tr><td><img src="" ><td id="weight"><td><object id="body_p" data="img/body.svg" />
+    <tr><td><img src="" ><td id="global_fat"><td><object id="body_p" data="img/body.svg" />
+    <tr><td><img src="img/body_water.jpg"  width="48" height="48"><td id="body_water">   <td><object id="body_p" data="img/body.svg" />
+    <tr><td><img src="img/viseral_fat.jpg" width="48" height="48"><td id="viseral_fat">  <td><object id="body_p" data="img/body.svg" />
+    <tr><td><img src="img/bmr.jpg"         width="48" height="48"><td id="bmr">          <td><object id="body_p" data="img/body.svg" />
+    <tr><td><img src="img/metabolic_age.jpg" width="48" height="48"><td id="metab_age">  <td><object id="body_p" data="img/body.svg" />
+  </table>
+  <hr>
+  <div class="footer">Made with love and <a href="http://d3js.org">d3.js</a></div>
+    
+ 
+<!-- load the d3.js library -->	
+<script src="http://d3js.org/d3.v3.min.js"></script>
+ 
+<script>
+var csv_file = "data/data.csv";
+</script>
+
+<script src="tanita.js"></script>
+
+<script>
+window.onload = function() {
+    // Get the Object by ID
+    var a = document.getElementById("body_p");
+
+    // Get the SVG document inside the Object tag
+    var svgDoc = a.contentDocument;
+
+    // Get one of the SVG items by ID;
+    var svgItem = svgDoc.getElementById(svg_part_ids["ml"]);
+ 
+    // Set the colour to something else
+    svgItem.setAttribute("style", "fill:pink");
+};
+</script>
+
+</body>
