@@ -144,6 +144,7 @@ d3.csv(csv_file, function(error, data) {
     // Add the valueline path.
     svg1.append("path")
 	.attr("class", "line")
+	.style("stroke-width", 3)
 	.attr("d", weight(data));
     
     // Add the X Axis
@@ -174,6 +175,7 @@ d3.csv(csv_file, function(error, data) {
     svg2.append("path")
 	.attr("class", "line")
 	.attr("d", fat(data))
+	.style("stroke-width", 3)
 	.style("stroke", "red");
     
     // Add the X Axis
@@ -206,6 +208,7 @@ d3.csv(csv_file, function(error, data) {
     svg_bmr.append("path")
 	.attr("class", "line")
 	.attr("d", bmr_line(data))
+	.style("stroke-width", 3)
 	.style("stroke", "red");
     
     // Add the X Axis
@@ -238,6 +241,7 @@ d3.csv(csv_file, function(error, data) {
     svg_age.append("path")
 	.attr("class", "line")
 	.attr("d", age_line(data))
+	.style("stroke-width", 3)
 	.style("stroke", "red");
     
     // Add the X Axis
@@ -271,6 +275,7 @@ d3.csv(csv_file, function(error, data) {
     svg_water.append("path")
 	.attr("class", "line")
 	.attr("d", water(data))
+	.style("stroke-width", 3)
 	.style("stroke", "blue");
     
     // Add the X Axis
@@ -304,6 +309,7 @@ d3.csv(csv_file, function(error, data) {
     svg_viseral.append("path")
 	.attr("class", "line")
 	.attr("d", water(data))
+	.style("stroke-width", 3)
 	.style("stroke", "#000000");
     
     // Add the X Axis
@@ -413,6 +419,7 @@ d3.csv(csv_file, function(error, data) {
     parts.append("path")
         .attr("class", "line")
         .attr("d", function(d) { return line(d.values); })
+	.style("stroke-width", 3)
 	.style("stroke", function(d) { return color(d.name); });
 
     legendSpace = width/body_parts.length;
@@ -425,6 +432,7 @@ d3.csv(csv_file, function(error, data) {
 	    .attr("class", "legend")
 	    .style("fill", function() {
 		return d.color = color(d.name); })
+	    .style("font-weight", "bold")
 	    .text(legend["fat"][d.name]);
     });
 
@@ -470,6 +478,7 @@ d3.csv(csv_file, function(error, data) {
     parts.append("path")
         .attr("class", "line")
         .attr("d", function(d) { return line(d.values); })
+	.style("stroke-width", 3)
 	.style("stroke", function(d) { return color(d.name); });
 
     legendSpace = width/body_parts.length;
@@ -482,6 +491,7 @@ d3.csv(csv_file, function(error, data) {
 	    .attr("class", "legend")
 	    .style("fill", function() {
 		return d.color = color(d.name); })
+	    .style("font-weight", "bold")
 	    .text(legend["muscle"][d.name]);
     });
 
@@ -525,6 +535,7 @@ d3.csv(csv_file, function(error, data) {
     parts.append("path")
         .attr("class", "line")
         .attr("d", function(d) { return line(d.values); })
+	.style("stroke-width", 3)
 	.style("stroke", function(d) { return color(d.name); });
 
     legendSpace = width/body_parts.length;
@@ -537,6 +548,7 @@ d3.csv(csv_file, function(error, data) {
 	    .attr("class", "legend")
 	    .style("fill", function() {
 		return d.color = color(d.name); })
+	    .style("font-weight", "bold")
 	    .text(legend["muscle"][d.name]);
     });
 
@@ -580,6 +592,7 @@ d3.csv(csv_file, function(error, data) {
     parts.append("path")
         .attr("class", "line")
         .attr("d", function(d) { return line(d.values); })
+	.style("stroke-width", 3)
 	.style("stroke", function(d) { return color(d.name); });
 
     legendSpace = width/body_parts.length;
@@ -592,6 +605,7 @@ d3.csv(csv_file, function(error, data) {
 	    .attr("class", "legend")
 	    .style("fill", function() {
 		return d.color = color(d.name); })
+	    .style("font-weight", "bold")
 	    .text(legend["muscle"][d.name]);
     });
 
