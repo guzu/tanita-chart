@@ -1,3 +1,4 @@
+function tanita_draw(csv_data) {
 var	legend = new Array();
 	legend["fat"] = new Array();
 	legend["muscle"] = new Array();
@@ -32,21 +33,21 @@ var	svg_part_ids = new Array();
 var	margin = {top: 30, right: 20, bottom: 30, left: 50},
 	width = 1000 - margin.left - margin.right,
 	height = 200 - margin.top - margin.bottom;
- 
+
 // Parse the date / time
 var	parseDate = d3.time.format("%d/%m/%Y").parse;
- 
+
 // Set the ranges
 var	x = d3.time.scale().range([0, width]);
 var	y = d3.scale.linear().range([height, 0]);
- 
+
 // Define the axes
 var	xAxis = d3.svg.axis().scale(x)
 	.orient("bottom").ticks(10);
- 
+
 var	yAxis = d3.svg.axis().scale(y)
 	.orient("left").ticks(5);
- 
+
 // Define the line
 var	weight = d3.svg.line()
     	.interpolate("basis")
@@ -56,6 +57,9 @@ var	fat = d3.svg.line()
     	.interpolate("basis")
 	.x(function(d) { return x(d.DT); })
 	.y(function(d) { return y(d.FW); });
+
+// Remove previous graphs
+d3.selectAll("svg").remove();
     
 // Adds the svg canvas
 var	svg1 = d3.select("#weight")
@@ -118,9 +122,49 @@ var	svg_age = d3.select("#metab_age")
 		.attr("height", height + margin.top + margin.bottom)
 	.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
- 
-// Get the data
-d3.csv(csv_file, function(error, data) {
+
+
+    // Get the data
+    var rows = csv_data.split(/[\r\n|\n]+/);
+    var data = [];
+    for (var i = 0; i < rows.length; i++) {
+	var line = rows[i].trim();
+
+	if (line.length == 0)
+	    continue;
+
+	var dat = line.replace(/"/g, '').split(',');
+
+	data.push ({
+	    DT:dat[dat.indexOf("DT") + 1],
+	    MO:dat[dat.indexOf("MO") + 1],
+	    Hm:dat[dat.indexOf("Hm") + 1],
+	    AG:dat[dat.indexOf("AG") + 1],
+	    AL:dat[dat.indexOf("AL") + 1],
+	    Wk:dat[dat.indexOf("Wk") + 1],
+	    FW:dat[dat.indexOf("FW") + 1],
+	    FT:dat[dat.indexOf("FT") + 1],
+	    Fr:dat[dat.indexOf("Fr") + 1],
+	    Fl:dat[dat.indexOf("Fl") + 1],
+	    FR:dat[dat.indexOf("FR") + 1],
+	    FL:dat[dat.indexOf("FL") + 1],
+	    mT:dat[dat.indexOf("mT") + 1],
+	    mr:dat[dat.indexOf("mr") + 1],
+	    ml:dat[dat.indexOf("ml") + 1],
+	    mR:dat[dat.indexOf("mR") + 1],
+	    mL:dat[dat.indexOf("mL") + 1],
+	    mW:dat[dat.indexOf("mW") + 1],
+	    rD:dat[dat.indexOf("rD") + 1],
+	    rA:dat[dat.indexOf("rA") + 1],
+	    IF:dat[dat.indexOf("IF") + 1],
+	    MI:dat[dat.indexOf("MI") + 1],
+	    bw:dat[dat.indexOf("bw") + 1],
+	    ww:dat[dat.indexOf("ww") + 1]
+	});
+    }
+
+    document.getElementById('graphs').style.visibility='visible';
+
     // Extract model, age and height
     u_model  = data[0].MO;
     u_height = data[0].Hm;
@@ -130,9 +174,9 @@ d3.csv(csv_file, function(error, data) {
 	'Age : ' + u_age + '<br>' +
 	'Height : ' + Math.floor(u_height) + '<br>' +
 	'Model : ' + u_model;
-    
+
     document.getElementById('img_model').src = "img/model-" + u_model.toLowerCase() + ".jpg";
-    
+
     data.forEach(function(d) {
 	d.DT = parseDate(d.DT);
     });
@@ -140,22 +184,22 @@ d3.csv(csv_file, function(error, data) {
     x.domain(d3.extent(data, function(d) { return d.DT; }));
     y.domain(d3.extent(data, function(d) { return d.Wk; }));
     //y.domain([80, 87]);
-    
+
     // Add the valueline path.
     svg1.append("path")
 	.attr("class", "line")
 	.style("stroke-width", 3)
 	.attr("d", weight(data));
-    
+
     // Add the X Axis
-    svg1.append("g")		
+    svg1.append("g")
 	.attr("class", "x axis")
 	.attr("transform", "translate(0," + height + ")")
 	.call(xAxis
 	      .tickSize(-height, 0, 0));
-    
+
     // Add the Y Axis
-    svg1.append("g")		
+    svg1.append("g")
 	.attr("class", "y axis")
 	.call(yAxis
 	      .tickSize(-width, 0, 0))
@@ -177,15 +221,15 @@ d3.csv(csv_file, function(error, data) {
 	.attr("d", fat(data))
 	.style("stroke-width", 3)
 	.style("stroke", "red");
-    
+
     // Add the X Axis
     svg2.append("g")
 	.attr("class", "x axis")
 	.attr("transform", "translate(0," + height + ")")
 	.call(xAxis);
-    
+
     // Add the Y Axis
-    svg2.append("g")		
+    svg2.append("g")
 	.attr("class", "y axis")
 	.call(yAxis)
 	.append("text")
@@ -210,15 +254,15 @@ d3.csv(csv_file, function(error, data) {
 	.attr("d", bmr_line(data))
 	.style("stroke-width", 3)
 	.style("stroke", "red");
-    
+
     // Add the X Axis
     svg_bmr.append("g")
 	.attr("class", "x axis")
 	.attr("transform", "translate(0," + height + ")")
 	.call(xAxis);
-    
+
     // Add the Y Axis
-    svg_bmr.append("g")		
+    svg_bmr.append("g")
 	.attr("class", "y axis")
 	.call(yAxis)
 	.append("text")
@@ -243,15 +287,15 @@ d3.csv(csv_file, function(error, data) {
 	.attr("d", age_line(data))
 	.style("stroke-width", 3)
 	.style("stroke", "red");
-    
+
     // Add the X Axis
     svg_age.append("g")
 	.attr("class", "x axis")
 	.attr("transform", "translate(0," + height + ")")
 	.call(xAxis);
-    
+
     // Add the Y Axis
-    svg_age.append("g")		
+    svg_age.append("g")
 	.attr("class", "y axis")
 	.call(yAxis)
 	.append("text")
@@ -277,15 +321,15 @@ d3.csv(csv_file, function(error, data) {
 	.attr("d", water(data))
 	.style("stroke-width", 3)
 	.style("stroke", "blue");
-    
+
     // Add the X Axis
     svg_water.append("g")
 	.attr("class", "x axis")
 	.attr("transform", "translate(0," + height + ")")
 	.call(xAxis);
-    
+
     // Add the Y Axis
-    svg_water.append("g")		
+    svg_water.append("g")
 	.attr("class", "y axis")
 	.call(yAxis)
 	.append("text")
@@ -311,15 +355,15 @@ d3.csv(csv_file, function(error, data) {
 	.attr("d", water(data))
 	.style("stroke-width", 3)
 	.style("stroke", "#000000");
-    
+
     // Add the X Axis
     svg_viseral.append("g")
 	.attr("class", "x axis")
 	.attr("transform", "translate(0," + height + ")")
 	.call(xAxis);
-    
+
     // Add the Y Axis
-    svg_viseral.append("g")		
+    svg_viseral.append("g")
 	.attr("class", "y axis")
 	.call(yAxis)
 	.append("text")
@@ -346,7 +390,7 @@ d3.csv(csv_file, function(error, data) {
 	    })
 	};
     }));
-    
+
 //    x.domain(d3.extent(data, function(d) { return d.DT; }));
 //    y.domain([0,100]);
 
@@ -358,7 +402,7 @@ d3.csv(csv_file, function(error, data) {
 //        .x(function(d) { return x(d.date); })
 //        .y0(function(d) { return y(d.y0); })
 //        .y1(function(d) { return y(d.y0 + d.fat); });
-    
+
 //    parts.append("path")
 //	.attr("class", "area")
 //	.attr("d", function(d) { return area(d.values); })
@@ -386,10 +430,10 @@ d3.csv(csv_file, function(error, data) {
         .interpolate("basis")
         .x(function(d) { return x(d.date); })
         .y(function(d) { return y(d.y); });
-    
+
     color = d3.scale.category10();
     color.domain( ["FW", "Fr", "Fl", "FR", "FL", "FT"] );
-    
+
     data_fat = d3.nest().key(function(d) { return d.name; }).entries(data);
 
     y.domain([d3.min(body_parts, function(d) { return d3.min(d.values, function (d) { return d.y; }); }),
@@ -460,7 +504,7 @@ d3.csv(csv_file, function(error, data) {
     y.domain([d3.min(body_parts, function(d) { return d3.min(d.values, function (d) { return +d.y; }); }),
     	      d3.max(body_parts, function(d) { return d3.max(d.values, function (d) { return +d.y; }); })]);
     //y.domain([ 0, 80 ]);
-    
+
     svg4.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
@@ -469,7 +513,7 @@ d3.csv(csv_file, function(error, data) {
     svg4.append("g")
        .attr("class", "y axis")
         .call(yAxis);
-    
+
     var parts = svg4.selectAll(".muscle")
         .data(body_parts)
         .enter().append("g")
@@ -512,12 +556,12 @@ d3.csv(csv_file, function(error, data) {
         .interpolate("basis")
         .x(function(d) { return x(d.date); })
         .y(function(d) { return y(d.y); });
-    
+
     data_muscle = d3.nest().key(function(d) { return d.name; }).entries(data);
 
     y.domain([d3.min(body_parts, function(d) { return d3.min(d.values, function (d) { return +d.y; }); }),
     	      d3.max(body_parts, function(d) { return d3.max(d.values, function (d) { return +d.y; }); })]);
-    
+
     svg5.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
@@ -526,7 +570,7 @@ d3.csv(csv_file, function(error, data) {
     svg5.append("g")
        .attr("class", "y axis")
         .call(yAxis);
-    
+
     var parts = svg5.selectAll(".muscle")
         .data(body_parts)
         .enter().append("g")
@@ -569,12 +613,12 @@ d3.csv(csv_file, function(error, data) {
         .interpolate("basis")
         .x(function(d) { return x(d.date); })
         .y(function(d) { return y(d.y); });
-    
+
     data_muscle = d3.nest().key(function(d) { return d.name; }).entries(data);
 
     y.domain([d3.min(body_parts, function(d) { return d3.min(d.values, function (d) { return d.y; }); }),
     	      d3.max(body_parts, function(d) { return d3.max(d.values, function (d) { return d.y; }); })]);
-    
+
     svg6.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
@@ -583,7 +627,7 @@ d3.csv(csv_file, function(error, data) {
     svg6.append("g")
        .attr("class", "y axis")
         .call(yAxis);
-    
+
     var parts = svg6.selectAll(".muscle")
         .data(body_parts)
         .enter().append("g")
@@ -609,4 +653,4 @@ d3.csv(csv_file, function(error, data) {
 	    .text(legend["muscle"][d.name]);
     });
 
-});
+}

@@ -2,7 +2,11 @@
 <meta charset="utf-8">
 <style> /* set the CSS */
  
-body { font: 12px Arial;}
+body {
+    font: 12px Arial;
+    /*color: white;
+    background-color: #333333;*/
+}
 
 a {
     text-decoration: none;
@@ -31,6 +35,10 @@ path {
     opacity: 0.5
 }
 
+table#graphs {
+    visibility: hidden;
+}
+
 div.footer {
     width: 100%;
     text-align: center;
@@ -56,27 +64,37 @@ div.graph {
     <output id="list"></output>
 
     <script>
-      function handleFileSelect(evt) {
-      var files = evt.target.files; // FileList object
+    function fileInfo(e) {
+	var file = e.target.files[0];
+	if (file.name.split(".")[1].toUpperCase() != "CSV") {
+	    alert('Invalid csv file !');
+	    e.target.parentNode.reset();
+	    return;
+	} else {
+	    document.getElementById('files').innerHTML = "<p>File Name: "+file.name + " | "+file.size+" Bytes.</p>";
+	}
 
-	      // files is a FileList of File objects. List some properties.
-      var output = [];
-      for (var i = 0, f; f = files[i]; i++) {
-            output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-	                f.size, ' bytes, last modified: ',
-                        f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                  '</li>');
-      }
-      document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+	handleFileSelect();
     }
 
-    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    function handleFileSelect() {
+	var file = document.getElementById("files").files[0];
+	var reader = new FileReader();
+	var link_reg = /(http:\/\/|https:\/\/)/i;
+	reader.onload = function(file) {
+	    var content = file.target.result;
+            tanita_draw (content);
+	};
+        reader.readAsText(file);
+    }
+
+    document.getElementById('files').addEventListener('change', fileInfo, false);
     </script>
     <td width="50%" id="user_info">
     <td width="50px" ><img id="img_model" width="48" height="48">
   </table>
   <hr>  
-  <table>
+  <table id="graphs">
     <tr><td><img src="img/body_fat.jpg"    width="48" height="48"><td id="body_fat">     <td><object id="body_p" data="img/body.svg" />
     <tr><td><img src="img/muscle_mass.jpg" width="48" height="48"><td id="global_muscle"><td><object id="body_p" data="img/body.svg" />
     <tr><td><img src="img/muscle_mass.jpg" width="48" height="48"><td id="leg_muscle">   <td><object id="body_p" data="img/body.svg" />
@@ -95,26 +113,6 @@ div.graph {
 <!-- load the d3.js library -->	
 <script src="http://d3js.org/d3.v3.min.js"></script>
  
-<script>
-var csv_file = "data/data.csv";
-</script>
-
 <script src="tanita.js"></script>
-
-<script>
-window.onload = function() {
-    // Get the Object by ID
-    var a = document.getElementById("body_p");
-
-    // Get the SVG document inside the Object tag
-    var svgDoc = a.contentDocument;
-
-    // Get one of the SVG items by ID;
-    var svgItem = svgDoc.getElementById(svg_part_ids["ml"]);
- 
-    // Set the colour to something else
-    svgItem.setAttribute("style", "fill:pink");
-};
-</script>
 
 </body>
